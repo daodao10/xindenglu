@@ -62,11 +62,8 @@ function parseContent(title, text) {
         content = [];
 
     content.push(`##  ${title}`);
-    $content.toArray().forEach(element => {
-        textChild = element.children[0];
-        if (textChild.type === 'text') {
-            content.push(textChild.data.trim());
-        }
+    $content.each((idx, ele) => {
+        content.push($(ele).text().trim());
     });
 
     return content.join('\n\n') + '\n';
