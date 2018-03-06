@@ -97,7 +97,57 @@ async function xx(pageSlice) {
         });
 }
 
+class Refiner {
+    constructor(dir) {
+        this.dir = dir;
+    }
+
+    static refineFile(filePath) {
+        const
+            EmRegex = /(\*.+?\*)\s*^\n/g,
+            StrongRegex = /(__.+?__)\s*^\n/g
+
+        fs.readFile(filePath, function (err, data) {
+            if (err) {
+                console.error(err);
+                return;
+            }
+            if (data.length > 0) {
+                let content = data.toString()
+                content = content.replace(EmRegex, '$1 ')
+                content = content.replace(StrongRegex, '$1 ')
+                fs.writeFile(filePath, content, (err) => {
+                    if (err) throw err;
+                    console.debug(`${filePath} saved`)
+                });
+            }
+        });
+    }
+
+    refine() {
+        let dir = this.dir
+        fs.readdir(dir, function (err, files) {
+            if (err) throw err;
+            files.forEach(function (file) {
+                let filePath = path.join(dir, file)
+                fs.stat(filePath, function (err, stat) {
+                    if (stat.isFile() && filePath.endsWith('.md')) {
+                        Refiner.refineFile(filePath)
+                        // console.debug(filePath)
+                    }
+                });
+            });
+        })
+    }
+}
+
 // getContent(['201', '无生无灭　乃为此我']);
 // getContent(['101', '佛与人生同一心灯']);
 
-main();
+// main();
+
+
+// refine for ebook
+// Refiner.refineFile('./content/101.md')
+// Refiner.refineFile('./content/105.md')
+new Refiner('./content/').refine()

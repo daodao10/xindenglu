@@ -1,5 +1,5 @@
 BUILD = ../build
-BOOKNAME = 心灯录
+BOOKNAME = 心灯录批注版
 METADATA = metadata.yaml
 TOC = --toc --toc-depth=2
 SRC_DIR = ./content
